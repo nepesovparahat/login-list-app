@@ -1,6 +1,6 @@
-.login{
-    &__avatar{
-        width: 110px;
-        height: 130px;
-    }
+.login {
+  margin-top: 150px;
+  &__box-rounded {
+    border-radius: 1rem;
+  }
 }
