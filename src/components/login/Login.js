@@ -1,58 +1,121 @@
-import React from "react";
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import axios from "axios";
 import avatar from "../../assets/images/avatar.svg";
+import SpinnerButton from "./SpinnerButton";
 import "./Login.scss";
 
 const Login = () => {
+  const [connected, setConnected] = useState(false);
+  const [error, setError] = useState(false);
+  const history = useHistory();
+  const [inputValues, setInputValues] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleSubmit = async (e) => {
+    setConnected(true);
+    e.preventDefault();
+    const { email, password } = inputValues;
+    let data = new FormData();
+    data.append("mail", email);
+    data.append("password", password);
+    const headers = {
+      "X-Requested-With": "XMLHttpRequest",
+      "Content-Type": "application/x-www-form-urlencoded",
+    };
+    let result = await axios
+      .post("https://api.ziyuno.com/api/auth/login/en", data, {
+        headers: headers,
+      })
+      .then((res) => res.data.result)
+      .catch((error) => {
+        console.log(error);
+      });
+    if (result.user) {
+      history.push("/home");
+      setConnected(false);
+    } else {
+      setError("E-mail or password entered does not match, try again!");
+      setConnected(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    setInputValues((prevInputs) => {
+      return {
+        ...prevInputs,
+        [e.target.name]: e.target.value,
+      };
+    });
+  };
+
   return (
-    <div class="d-flex justify-content-center login">
-      <div class="col-md-3">
-        <div class="login-form login__box-rounded bg-light m4-2 p-4 shadow-lg">
-          <div class="d-flex justify-content-center pb-4">
+    <div className="d-flex justify-content-center login">
+      <div className="col-md-3">
+        <div className="login-form login__box-rounded bg-light m4-2 p-4 shadow-lg">
+          <div className="d-flex justify-content-center pb-4">
             <img
               src={avatar}
               alt="avatar-logo"
-              class="img-fluid img-thumbnail"
+              className="img-fluid img-thumbnail"
             />
           </div>
-          <form class="row g-3">
-            <div class="col-12">
+          <form onSubmit={handleSubmit} className="row g-3">
+            <div className="col-12">
               <input
-                id="email"
                 type="email"
-                class="form-control"
                 name="email"
+                className="form-control"
+                value={inputValues.email}
                 placeholder="Email"
+                onChange={handleChange}
                 required
-                autofocus
+                style={{
+                  border: error ? "3px solid #d37575" : null,
+                }}
               />
-              <div class="invalid-feedback">Email is invalid</div>
+              <div className="invalid-feedback">Email is invalid</div>
             </div>
-            <div class="col-12">
+            <div className="col-12">
               <input
-                type="password"
                 name="password"
-                class="form-control"
+                type="password"
+                value={inputValues.password}
+                className="form-control"
                 placeholder="Password"
+                onChange={handleChange}
                 required
-                autofocus
+                style={{
+                  border: error ? "3px solid #d37575" : null,
+                }}
               />
             </div>
-            <div class="col-12">
-              <div class="form-check">
+            <div className="col-12">
+              <div className="form-check">
                 <input
-                  class="form-check-input"
+                  className="form-check-input"
                   type="checkbox"
                   id="rememberMe"
                 />
-                <label class="form-check-label" for="rememberMe">
-                  Remember me
-                </label>
+                <label className="form-check-label">Remember me</label>
               </div>
             </div>
-            <div class="d-grid gap-4 col-6 mx-auto">
-              <button type="submit" class="btn btn-primary">
-                Login
-              </button>
+            {error && (
+              <div className="alert alert-danger p-2" role="alert">
+                {error}
+              </div>
+            )}
+            <div className="d-grid gap-4 col-6 mx-auto">
+              {connected ? (
+                <SpinnerButton />
+              ) : (
+                <button type="submit" className="btn btn-primary">
+                  Login
+                </button>
+              )}
             </div>
           </form>
         </div>
