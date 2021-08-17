@@ -35,7 +35,7 @@ const Login = () => {
         console.log(error);
       });
     if (result.user) {
-      history.push("/home");
+      history.push("/user");
       setConnected(false);
     } else {
       setError("E-mail or password entered does not match, try again!");
