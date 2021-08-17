@@ -1,0 +1,28 @@
+.home {
+  max-width: 1450px;
+  margin: 0 auto;
+  &__img {
+    margin: 30px 0;
+  }
+  &__content {
+    margin-top: 50px;
+  }
+  &__user-btn {
+    border: none;
+    padding: 10px 20px;
+    margin: 1px 0;
+    width: 100%;
+    text-align: start;
+  }
+  &__product {
+    border: 1px solid white;
+    padding: 10px 0;
+    font-size: large;
+    color: white;
+    font-weight: bold;
+    background-color: rgba(31, 5, 148, 0.973);
+  }
+}
+.col-2 {
+  margin-right: 50px;
+}
