@@ -2,9 +2,11 @@
   max-width: 1450px;
   height: 140vh;
   margin: 0 auto;
+
   &__img {
     margin: 30px 0;
   }
+
   &__content {
     margin-top: 50px;
   }
@@ -16,20 +18,24 @@
     color: white;
     font-weight: 500;
     background-color: rgba(31, 5, 148, 0.973);
+
     &--active {
       color: black;
       background-color: rgb(239, 239, 239);
     }
+
     &--delete {
       background-color: bisque;
       color: black;
       width: 200px !important;
     }
+
     &--process {
       background-color: rgba(31, 5, 148, 0.973);
       width: 200px !important;
     }
   }
+
   &__delete-btn {
     outline: none !important;
     border: none !important;
@@ -51,6 +57,12 @@
   &__link-active {
     text-decoration: none;
     color: black;
+  }
+
+  &__spinner {
+    position: absolute;
+    right: 35%;
+    bottom: 10px;
   }
 }
 .col-2 {

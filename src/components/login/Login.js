@@ -1,11 +1,12 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
 import avatar from "../../assets/images/avatar.svg";
 import SpinnerButton from "./SpinnerButton";
 import "./Login.scss";
+import authentication from "../../services/autService";
 
+// eslint-disable-next-line no-unused-vars
 const Login = () => {
   const [connected, setConnected] = useState(false);
   const [error, setError] = useState(false);
@@ -19,22 +20,9 @@ const Login = () => {
     setConnected(true);
     e.preventDefault();
     const { email, password } = inputValues;
-    let data = new FormData();
-    data.append("mail", email);
-    data.append("password", password);
-    const headers = {
-      "X-Requested-With": "XMLHttpRequest",
-      "Content-Type": "application/x-www-form-urlencoded",
-    };
-    let result = await axios
-      .post("https://api.ziyuno.com/api/auth/login/en", data, {
-        headers: headers,
-      })
-      .then((res) => res.data.result)
-      .catch((error) => {
-        console.log(error);
-      });
-    if (result.user) {
+    const authLogin = await authentication(email, password);
+
+    if (authLogin.user) {
       history.push("/user");
       setConnected(false);
     } else {

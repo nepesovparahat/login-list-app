@@ -2,25 +2,21 @@ import React, { useState, useEffect } from "react";
 import Header from "../header/Header";
 import image from "../../assets/images/bg.jpg";
 import "./User.scss";
-import axios from "axios";
+import getProduct from "../../services/productService";
 import { Link } from "react-router-dom";
 
 const User = () => {
   const [products, setProducts] = useState([]);
-  const instance = axios.create({
-    baseURL: "https://api.ziyuno.com/api/package/packages/en",
-    headers: {
-      "X-Requested-With": "XMLHttpRequest",
-    },
-  });
-  async function requestProducts() {
-    await instance
-      .get()
-      .then((res) => setProducts(res.data.result))
-      .catch((error) => console.log(error));
+  const [loading, setLoading] = useState(false);
+
+  async function requestProduct() {
+    let res = await getProduct();
+    setProducts(res.data.result);
+    if (res.data.result) setLoading(true);
   }
+
   useEffect(() => {
-    requestProducts();
+    requestProduct();
   }, []);
 
   console.log(products);
@@ -49,7 +45,6 @@ const User = () => {
             <button className="user__link">Logout</button>
           </Link>
         </div>
-
         <div className="col">
           <div className="row">
             <div className="col text-center user__product">Name</div>
@@ -58,19 +53,29 @@ const User = () => {
               Process
             </div>
           </div>
-          {products.map((item, index) => (
-            <div className="row" key={index}>
-              <div className="col text-center user__product user__product--active">
-                {item.name}
-              </div>
-              <div className="col text-center user__product user__product--active">
-                {item.price}
-              </div>
-              <div className="col-3 text-center user__product user__product--delete">
-                <button className="btn user__delete-btn">Delete</button>
-              </div>
+          {!loading ? (
+            <div
+              className="spinner-grow user__spinner"
+              style={{ width: "3rem", height: "3rem" }}
+              role="status"
+            >
+              <span className="visually-hidden">Loading...</span>
             </div>
-          ))}
+          ) : (
+            products.map((item, index) => (
+              <div className="row" key={index}>
+                <div className="col text-center user__product user__product--active">
+                  {item.name}
+                </div>
+                <div className="col text-center user__product user__product--active">
+                  {item.price}
+                </div>
+                <div className="col-3 text-center user__product user__product--delete">
+                  <button className="btn user__delete-btn">Delete</button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
